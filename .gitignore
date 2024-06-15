@@ -1,0 +1,13 @@
+
+#nodemodules
+/node_modules
+
+#Environment variables
+.env
+
+
+#primsa files
+
+
+
+
