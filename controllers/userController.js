@@ -4,7 +4,6 @@ exports.registerUser = async (req, res) => {
     const { email, username, phoneNumber, fullName, country, uid } = req.body;
   
     try {
-      // Check if the user already exists
       const existingUser = await prisma.user.findUnique({
         where: { uid: uid },
       });
@@ -13,7 +12,6 @@ exports.registerUser = async (req, res) => {
         return res.status(400).json({ message: 'User already exists.' });
       }
   
-      // Create a new user
       const newUser = await prisma.user.create({
         data: {
           email,
@@ -21,8 +19,8 @@ exports.registerUser = async (req, res) => {
           phoneNumber,
           fullName,
           country,
-          uid, // Storing Firebase UID
-          healthScore: 0, // Initialize healthScore
+          uid, 
+          healthScore: 0, 
         },
       });
   

@@ -50,4 +50,7 @@ app.get('/api/test/healthcheck', (req, res) => {
     res.send('I am alive');
 });
 
+
+app.use('/api/users', require('./routes/userRoutes'));
+
 module.exports = app;
