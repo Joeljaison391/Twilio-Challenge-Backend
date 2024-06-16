@@ -91,7 +91,12 @@ model PredefinedNutritionGoal {
   id          Int      @id @default(autoincrement())
   name        String
   description String
-  targetValue Float
+  mealType    String   // Meal type (e.g., Breakfast, Lunch, Dinner)
+  mealTimes    String[]   // Meal time (e.g., Morning, Afternoon, Evening)
+  recommendedDailyMeals Int
+  targetValue Int
+  DailyCalories Int
+  Type       String   // Daily , monthly or weekly
   ageGroup    String   // Age group suitability (e.g., Children, Teens, Adults)
   priority    Int      // Priority level of the goal
   benefits    String[] // Array of benefits
