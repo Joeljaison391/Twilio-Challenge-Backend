@@ -95,8 +95,8 @@ model PredefinedNutritionGoal {
   mealTimes    String[]   // Meal time (e.g., Morning, Afternoon, Evening)
   recommendedDailyMeals Int
   targetValue Int
-  DailyCalories Int
-  Type       String   // Daily , monthly or weekly
+  dailyCalories Int
+  type       String   // Daily , monthly or weekly
   ageGroup    String   // Age group suitability (e.g., Children, Teens, Adults)
   priority    Int      // Priority level of the goal
   benefits    String[] // Array of benefits

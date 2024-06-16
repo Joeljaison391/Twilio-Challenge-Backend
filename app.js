@@ -53,5 +53,6 @@ app.get('/api/test/healthcheck', (req, res) => {
 
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/admin/sleepgoals', require('./routes/sleepgoalRoutes'));
+app.use('/api/admin/nutritiongoals', require('./routes/nutritiongoalRoutes'));
 
 module.exports = app;
