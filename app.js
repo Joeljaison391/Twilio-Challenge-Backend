@@ -7,6 +7,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const path = require('path');
+const prisma = require('./database/db');
 
 app.use(cookieParser());
 
@@ -42,6 +43,10 @@ app.get('/', (req, res) => {
 
 app.get('/api/test/healthcheck', (req, res) => {
     console.log('Healthcheck endpoint hit');
+    if(prisma){
+        prisma.$connect();
+        console.log('Database connected');
+    }
     res.send('I am alive');
 });
 
