@@ -12,3 +12,236 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id                  Int                  @id @default(autoincrement())
+  uid                 String               @unique
+  healthScore         Int
+  email               String               @unique
+  username            String               @unique
+  phoneNumber         String               @unique
+  password            String
+  fullName            String
+  country             String
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  // Relationships
+  families            Family[]             @relation("FamilyMembers")
+  adminOf             Family[]             @relation("FamilyAdmin")
+  sleepGoals          UserSleepGoal[]
+  exerciseGoals       UserExerciseGoal[]
+  nutritionGoals      UserNutritionGoal[]
+  meditationGoals     UserMeditationGoal[]
+}
+
+model Family {
+  id                  Int                  @id @default(autoincrement())
+  name                String
+  healthScore         Int
+  adminUser           User                 @relation("FamilyAdmin", fields: [adminUserId], references: [id])
+  adminUserId         Int
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  // Relationships
+  members             User[]               @relation("FamilyMembers")
+  sleepGoals          FamilySleepGoal[]
+  exerciseGoals       FamilyExerciseGoal[]
+  nutritionGoals      FamilyNutritionGoal[]
+  meditationGoals     FamilyMeditationGoal[]
+}
+
+// Predefined Goals Models
+
+model PredefinedSleepGoal {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  targetValue Float
+  ageGroup    String   // Age group suitability (e.g., Children, Teens, Adults)
+  priority    Int      // Priority level of the goal
+  benefits    String[] // Array of benefits
+  issues      String[] // Array of potential issues if goal not met
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  userGoals   UserSleepGoal[]
+  familyGoals FamilySleepGoal[]
+}
+
+model PredefinedExerciseGoal {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  targetValue Float
+  ageGroup    String   // Age group suitability (e.g., Children, Teens, Adults)
+  priority    Int      // Priority level of the goal
+  benefits    String[] // Array of benefits
+  issues      String[] // Array of potential issues if goal not met
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  userGoals   UserExerciseGoal[]
+  familyGoals FamilyExerciseGoal[]
+}
+
+model PredefinedNutritionGoal {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  targetValue Float
+  ageGroup    String   // Age group suitability (e.g., Children, Teens, Adults)
+  priority    Int      // Priority level of the goal
+  benefits    String[] // Array of benefits
+  issues      String[] // Array of potential issues if goal not met
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  userGoals   UserNutritionGoal[]
+  familyGoals FamilyNutritionGoal[]
+}
+
+model PredefinedMeditationGoal {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  targetValue Float
+  ageGroup    String   // Age group suitability (e.g., Children, Teens, Adults)
+  priority    Int      // Priority level of the goal
+  benefits    String[] // Array of benefits
+  issues      String[] // Array of potential issues if goal not met
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  userGoals   UserMeditationGoal[]
+  familyGoals FamilyMeditationGoal[]
+}
+
+// User and Family Goal Models
+
+model UserSleepGoal {
+  id                Int                 @id @default(autoincrement())
+  targetValue       Float               // This can be adjusted by the user if needed
+  currentValue      Float               // Progress value
+  startDate         DateTime
+  endDate           DateTime
+  status            String
+  userId            Int
+  user              User                @relation(fields: [userId], references: [id])
+  predefinedGoalId  Int                 // Foreign key to PredefinedSleepGoal
+  predefinedGoal    PredefinedSleepGoal @relation(fields: [predefinedGoalId], references: [id])
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+model FamilySleepGoal {
+  id                Int                 @id @default(autoincrement())
+  targetValue       Float               // This can be adjusted by the family if needed
+  currentValue      Float               // Progress value
+  startDate         DateTime
+  endDate           DateTime
+  status            String
+  familyId          Int
+  family            Family              @relation(fields: [familyId], references: [id])
+  predefinedGoalId  Int                 // Foreign key to PredefinedSleepGoal
+  predefinedGoal    PredefinedSleepGoal @relation(fields: [predefinedGoalId], references: [id])
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+model UserExerciseGoal {
+  id                Int                    @id @default(autoincrement())
+  targetValue       Float                  // This can be adjusted by the user if needed
+  currentValue      Float                  // Progress value
+  startDate         DateTime
+  endDate           DateTime
+  status            String
+  userId            Int
+  user              User                   @relation(fields: [userId], references: [id])
+  predefinedGoalId  Int                    // Foreign key to PredefinedExerciseGoal
+  predefinedGoal    PredefinedExerciseGoal @relation(fields: [predefinedGoalId], references: [id])
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+}
+
+model FamilyExerciseGoal {
+  id                Int                    @id @default(autoincrement())
+  targetValue       Float                  // This can be adjusted by the family if needed
+  currentValue      Float                  // Progress value
+  startDate         DateTime
+  endDate           DateTime
+  status            String
+  familyId          Int
+  family            Family                 @relation(fields: [familyId], references: [id])
+  predefinedGoalId  Int                    // Foreign key to PredefinedExerciseGoal
+  predefinedGoal    PredefinedExerciseGoal @relation(fields: [predefinedGoalId], references: [id])
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+}
+
+model UserNutritionGoal {
+  id                Int                    @id @default(autoincrement())
+  targetValue       Float                  // This can be adjusted by the user if needed
+  currentValue      Float                  // Progress value
+  startDate         DateTime
+  endDate           DateTime
+  status            String
+  userId            Int
+  user              User                   @relation(fields: [userId], references: [id])
+  predefinedGoalId  Int                    // Foreign key to PredefinedNutritionGoal
+  predefinedGoal    PredefinedNutritionGoal @relation(fields: [predefinedGoalId], references: [id])
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+}
+
+model FamilyNutritionGoal {
+  id                Int                    @id @default(autoincrement())
+  targetValue       Float                  // This can be adjusted by the family if needed
+  currentValue      Float                  // Progress value
+  startDate         DateTime
+  endDate           DateTime
+  status            String
+  familyId          Int
+  family            Family                 @relation(fields: [familyId], references: [id])
+  predefinedGoalId  Int                    // Foreign key to PredefinedNutritionGoal
+  predefinedGoal    PredefinedNutritionGoal @relation(fields: [predefinedGoalId], references: [id])
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+}
+
+model UserMeditationGoal {
+  id                Int                    @id @default(autoincrement())
+  targetValue       Float                  // This can be adjusted by the user if needed
+  currentValue      Float                  // Progress value
+  startDate         DateTime
+  endDate           DateTime
+  status            String
+  userId            Int
+  user              User                   @relation(fields: [userId], references: [id])
+  predefinedGoalId  Int                    // Foreign key to PredefinedMeditationGoal
+  predefinedGoal    PredefinedMeditationGoal @relation(fields: [predefinedGoalId], references: [id])
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+}
+
+
+model FamilyMeditationGoal {
+  id                Int                    @id @default(autoincrement())
+  targetValue       Float                  // This can be adjusted by the family if needed
+  currentValue      Float                  // Progress value
+  startDate         DateTime
+  endDate           DateTime
+  status            String
+  familyId          Int
+  family            Family                 @relation(fields: [familyId], references: [id])
+  predefinedGoalId  Int                    // Foreign key to PredefinedMeditationGoal
+  predefinedGoal    PredefinedMeditationGoal @relation(fields: [predefinedGoalId], references: [id])
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+}
+
