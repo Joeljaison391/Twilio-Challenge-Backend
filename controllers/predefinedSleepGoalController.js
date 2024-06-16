@@ -89,7 +89,7 @@ exports.deletePredefinedSleepGoal = async (req, res) => {
       where: { id: parseInt(id, 10) },
     });
 
-    res.status(204).json({ message: 'Predefined sleep goal deleted successfully' });
+    res.status(200).json({ message: 'Predefined sleep goal deleted successfully' });
   } catch (error) {
     console.error('Error deleting predefined sleep goal:', error);
     res.status(500).json({ message: 'Internal server error' });
